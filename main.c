@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<ctype.h>
 
-char dataTable[26][2];
+int dataTable[26];
 
 void populateTable(char currChar);
 
@@ -20,10 +20,7 @@ int main(int argc, char** argv) {
 	FILE* fp = fopen(dataFile, "r");
 										//Make a loop so that characters get put in the place they belong in the alphabet.
 	for(int i = 0; i < 26; i++) {		//This loop puts in initial value into 2D array.
-		currChar = i;					//FIXME... Can't I just use a single array?
-		printf("%c", currChar);			//FIXME problem with converting to ASCII and back
-		dataTable[i][0] = currChar;		//...Refer to index through ASCII values...
-		dataTable[i][1] = 0;
+		dataTable[i] = 0;
 	}
 	
 	fscanf(fp, "%c", &currChar);
@@ -32,18 +29,20 @@ int main(int argc, char** argv) {
 		fscanf(fp, "%c", &currChar);	
 	}
 
+/*	int j;								//used for printing out the dataTable.
 	for(int i = 0; i < 26; i++) {
-		printf("%c", dataTable[i][0]);
-		printf(": %c", dataTable[i][1]);
+		j = i + 97;
+		printf("%c ", (char)j);
+		printf("%d ", dataTable[i]);
 	}
 	printf("\n");
-
+*/
 return 0;
 }
 
 void populateTable(char currChar) {
-	//int index = currChar - 97;
-	//int oldFreq = dataTable[index][1];
-
-	//dataTable[index][1] = oldFreq++;
+	if(isalpha(currChar)) {
+		int index = currChar - 97;
+		dataTable[index]++;
+	}
 }
