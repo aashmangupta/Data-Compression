@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
+#include<bst.h>
+#include<string.h>
 
 int dataTable[26];
 
@@ -29,14 +31,6 @@ int main(int argc, char** argv) {
 		fscanf(fp, "%c", &currChar);	
 	}
 
-/*	int j;								//used for printing out the dataTable.
-	for(int i = 0; i < 26; i++) {
-		j = i + 97;
-		printf("%c ", (char)j);
-		printf("%d ", dataTable[i]);
-	}
-	printf("\n");
-*/
 return 0;
 }
 
