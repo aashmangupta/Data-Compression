@@ -1,17 +1,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
-#include"bstHuff.h"
 #include"string.h"
 #include"integer.h"
+#include"huffmanTree.h"
 
 int dataTable[26];
-BST* treesArr[26];
+HUFFNODE* nodeArr[26];
 int treeArrIndex = 0;
 
 void populateTable(char currChar);
 int getMinIndex();
-void addTree(int index);
+void makeIndividualNodes(int index);
 
 int main(int argc, char** argv) {
 	int count = 0;
@@ -25,10 +25,10 @@ int main(int argc, char** argv) {
 	char* dataFile = argv[argc - 1];
 	
 	FILE* fp = fopen(dataFile, "r");
-										//Make a loop so that characters get put in the place they belong in the alphabet.
+
 	for(int i = 0; i < 26; i++) {		//This loop puts in initial values into 2D array.
 		dataTable[i] = 0;
-		treesArr[i] = 0;
+		nodeArr[i] = 0;
 	}
 	
 	fscanf(fp, "%c", &currChar);
@@ -45,24 +45,23 @@ int main(int argc, char** argv) {
 
 	for(int i = 0; i < 26; i++) {
 		if(dataTable[i] > 0) {
-			addTree(i);
+			makeIndividualNodes(i);
 		}
 	}
 
 	for(int i = 0; i < 26; i++) {		//Use this to print individual trees.
-		if(treesArr[i] == 0) {
+		if(nodeArr[i] == 0) {
 			break;
 		}
-		displayBSTdebug(treesArr[i], stdout);
+		displayNodes(nodeArr[i]);
 	}
 
 return 0;
 }
 
-void addTree(int tableIndex) {
-	BST* temp = newBST(displayINTEGER, compareINTEGER, 0, freeINTEGER);
-	insertBST(temp, newINTEGER(dataTable[tableIndex]), (char)tableIndex+97);
-	treesArr[treeArrIndex] = temp;
+void makeIndividualNodes(int tableIndex) {		//Makes individual Huffman Tree nodes
+	HUFFNODE* temp = newHUFFNODE((char)tableIndex + 97, dataTable[tableIndex]);
+	nodeArr[treeArrIndex] = temp;
 	treeArrIndex++;
 }
 
