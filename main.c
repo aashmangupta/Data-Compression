@@ -1,16 +1,16 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
-#include"string.h"
-#include"integer.h"
+#include<string.h>
 #include"huffmanTree.h"
 
 int dataTable[26];
 HUFFNODE* nodeArr[26];
 int treeArrIndex = 0;
 
+void formHuffmanTree();
 void populateTable(char currChar);
-int getMinIndex();
+int getMinHuffNode();
 void makeIndividualNodes(int index);
 
 int main(int argc, char** argv) {
@@ -31,32 +31,88 @@ int main(int argc, char** argv) {
 		nodeArr[i] = 0;
 	}
 	
-	fscanf(fp, "%c", &currChar);
+	fscanf(fp, "%c", &currChar);		//This loop puts in the amount of repetitions of each character.
 	while(!feof(fp)) {
 		populateTable(currChar);
 		fscanf(fp, "%c", &currChar);	
 	}
-
-	printf("***PRINTING DATA TABLE***\n");
-	for(int i = 0; i < 26; i++) {		//Use this to print dataTable
-		printf("%c: ", (char) i+97);
-		printf("%d\n", dataTable[i]);
-	}
-
-	for(int i = 0; i < 26; i++) {
+	
+	fclose(fp);
+	
+	for(int i = 0; i < 26; i++) {		//Turns every character that was in the file to a huffmanNode.
 		if(dataTable[i] > 0) {
 			makeIndividualNodes(i);
 		}
 	}
 
-	for(int i = 0; i < 26; i++) {		//Use this to print individual trees.
-		if(nodeArr[i] == 0) {
-			break;
+	int flag = 0;						//Populates the array of all the HuffmanNodes.
+	for(int i = 0; i < 26; i++) {
+		if(nodeArr[i] != 0) {
+			flag++;
 		}
-		displayNodes(nodeArr[i]);
+	}
+	
+	while(flag != 1) {					//This manipulates the huffman tree, and essentially creates the whole thing.
+		formHuffmanTree();
+		flag--;
 	}
 
+	HUFFNODE* finalTree = 0;
+
+	for(int i = 0; i < 26; i++) {		//This is to get the final remaining node.
+		if(nodeArr[i] != 0) {
+			finalTree = nodeArr[i];
+		}
+	}
+	
+	findLeaves(finalTree, 0);
+	char* codeTable[26];
+	
+	for(int i = 0; i < 26; i++) {		//Populates the code Table.
+		codeTable[i] = returnCode(i);
+	}
+
+	FILE* fp2 = fopen(dataFile, "r");
+	char* newFile = strcat(dataFile, "Compressed"); 
+	FILE* compressedFile = fopen(newFile, "w");
+
+	for(int i = 0; i < 26; i++) {		//This puts in code values in to the compressed file, so that the data can be uncompressed.
+		if(codeTable[i] != 0) {
+			fprintf(compressedFile, "%c %s ", (char) i + 97, codeTable[i]);
+		}
+	}
+	fprintf(compressedFile, "*\n");
+
+	int codeTableIndex = 0;
+	
+	fscanf(fp2, "%c", &currChar);
+	while((!feof(fp2)) && (currChar != '\n')) {
+		codeTableIndex = currChar - 97;
+		fprintf(compressedFile, "%s", codeTable[codeTableIndex]);
+		fscanf(fp2, "%c", &currChar);
+	}
+	fclose(fp2);
+	fclose(compressedFile);
+
 return 0;
+}
+
+void formHuffmanTree() {
+	int temp1Index = getMinHuffNode();
+	HUFFNODE* temp1 = nodeArr[temp1Index];
+	nodeArr[temp1Index] = 0;
+
+	int temp2Index = getMinHuffNode();
+	HUFFNODE* temp2 = nodeArr[temp2Index];
+
+	HUFFNODE* resultingNode = newHUFFNODE(0, getWeight(temp1) + getWeight(temp2));
+	nodeArr[temp2Index] = resultingNode;
+
+	setLeft(resultingNode, temp1);
+	setParent(temp1, resultingNode);
+	setRight(resultingNode, temp2);
+	setParent(temp2, resultingNode);
+	setParent(resultingNode, 0);
 }
 
 void makeIndividualNodes(int tableIndex) {		//Makes individual Huffman Tree nodes
@@ -65,14 +121,16 @@ void makeIndividualNodes(int tableIndex) {		//Makes individual Huffman Tree node
 	treeArrIndex++;
 }
 
-int getMinIndex() {
-	int min = 10000;
+int getMinHuffNode() {							//Finds the current lowest occuring character 
+	int min = 1000000;
 	int retVal;
 
 	for(int i = 0; i < 26; i++) {
-		if((dataTable[i] < min) && (dataTable[i] > 0)) {
-			min = dataTable[i];
-			retVal = i;
+		if(nodeArr[i] != 0) {
+			if(getWeight(nodeArr[i]) < min) {
+				min = getWeight(nodeArr[i]);
+				retVal = i;
+			}
 		}
 	}
 	return retVal;

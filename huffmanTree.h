@@ -4,12 +4,15 @@
 #include <stdio.h>
 
 typedef struct huffNode HUFFNODE;
-typedef struct huffTree HUFFTREE;
 
 extern HUFFNODE *newHUFFNODE(char character, int weight);
-extern HUFFTREE* newHUFFTREE();
 extern char getCharacter(HUFFNODE *h);
 extern int getWeight(HUFFNODE *h);
-extern void displayNodes(HUFFNODE *h);
+extern void displayNode(HUFFNODE *h);
+extern void setLeft(HUFFNODE *parent, HUFFNODE *child);
+extern void setRight(HUFFNODE *parent, HUFFNODE *child);
+extern void setParent(HUFFNODE *child, HUFFNODE *parent);
+extern void findLeaves(HUFFNODE* finalNode, int count);
+extern char* returnCode(int i);
 
 #endif
