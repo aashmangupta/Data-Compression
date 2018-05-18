@@ -73,12 +73,12 @@ int main(int argc, char** argv) {
 	}
 
 	FILE* fp2 = fopen(dataFile, "r");
-	char* newFile = strcat(dataFile, "Compressed"); 
+	char* newFile = strcat(dataFile, ".compressed"); 
 	FILE* compressedFile = fopen(newFile, "w");
 
 	for(int i = 0; i < 26; i++) {		//This puts in code values in to the compressed file, so that the data can be uncompressed.
 		if(codeTable[i] != 0) {
-			fprintf(compressedFile, "%c %s ", (char) i + 97, codeTable[i]);
+			fprintf(compressedFile, "%c%s ", (char) i + 97, codeTable[i]);
 		}
 	}
 	fprintf(compressedFile, "*\n");
@@ -91,6 +91,7 @@ int main(int argc, char** argv) {
 		fprintf(compressedFile, "%s", codeTable[codeTableIndex]);
 		fscanf(fp2, "%c", &currChar);
 	}
+
 	fclose(fp2);
 	fclose(compressedFile);
 
