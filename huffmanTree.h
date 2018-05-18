@@ -3,16 +3,25 @@
 
 #include <stdio.h>
 
-typedef struct huffNode HUFFNODE;
+typedef struct Huff_Node_Struct {
+	char character;
+	int weight;
+	int size;
+	char* code;
+	struct Huff_Node_Struct* left;
+	struct Huff_Node_Struct* right;
+	struct Huff_Node_Struct* parent;
+} HuffNode;
 
-extern HUFFNODE *newHUFFNODE(char character, int weight);
-extern char getCharacter(HUFFNODE *h);
-extern int getWeight(HUFFNODE *h);
-extern void displayNode(HUFFNODE *h);
-extern void setLeft(HUFFNODE *parent, HUFFNODE *child);
-extern void setRight(HUFFNODE *parent, HUFFNODE *child);
-extern void setParent(HUFFNODE *child, HUFFNODE *parent);
-extern void findLeaves(HUFFNODE* finalNode, int count);
-extern char* returnCode(int i);
+// Maybe change this method name to createHuffNode(char, int)
+HuffNode *newHUFFNODE(char character, int weight);
+char getCharacter(HuffNode *h);
+int getWeight(HuffNode *h);
+void displayNode(HuffNode *h);
+void setLeft(HuffNode *parent, HuffNode *child);
+void setRight(HuffNode *parent, HuffNode *child);
+void setParent(HuffNode *child, HuffNode *parent);
+void findLeaves(HuffNode* finalNode, int count);
+char* returnCode(int i);
 
 #endif

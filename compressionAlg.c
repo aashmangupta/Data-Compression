@@ -1,11 +1,11 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
-#include<string.h>
-#include"huffmanTree.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include "huffmanTree.h"
 
 int dataTable[26];
-HUFFNODE* nodeArr[26];
+HuffNode* nodeArr[26];
 int treeArrIndex = 0;
 
 void formHuffmanTree();
@@ -14,7 +14,6 @@ int getMinHuffNode();
 void makeIndividualNodes(int index);
 
 int main(int argc, char** argv) {
-	int count = 0;
 	char currChar;
 
 	if(argc < 2) {
@@ -57,7 +56,7 @@ int main(int argc, char** argv) {
 		flag--;
 	}
 
-	HUFFNODE* finalTree = 0;
+	HuffNode* finalTree = 0;
 
 	for(int i = 0; i < 26; i++) {		//This is to get the final remaining node.
 		if(nodeArr[i] != 0) {
@@ -100,13 +99,13 @@ return 0;
 
 void formHuffmanTree() {
 	int temp1Index = getMinHuffNode();
-	HUFFNODE* temp1 = nodeArr[temp1Index];
+	HuffNode* temp1 = nodeArr[temp1Index];
 	nodeArr[temp1Index] = 0;
 
 	int temp2Index = getMinHuffNode();
-	HUFFNODE* temp2 = nodeArr[temp2Index];
+	HuffNode* temp2 = nodeArr[temp2Index];
 
-	HUFFNODE* resultingNode = newHUFFNODE(0, getWeight(temp1) + getWeight(temp2));
+	HuffNode* resultingNode = newHUFFNODE(0, getWeight(temp1) + getWeight(temp2));
 	nodeArr[temp2Index] = resultingNode;
 
 	setLeft(resultingNode, temp1);
@@ -117,7 +116,7 @@ void formHuffmanTree() {
 }
 
 void makeIndividualNodes(int tableIndex) {		//Makes individual Huffman Tree nodes
-	HUFFNODE* temp = newHUFFNODE((char)tableIndex + 97, dataTable[tableIndex]);
+	HuffNode* temp = newHUFFNODE((char)tableIndex + 97, dataTable[tableIndex]);
 	nodeArr[treeArrIndex] = temp;
 	treeArrIndex++;
 }

@@ -6,18 +6,9 @@
 char code[100000];
 char* codeTable[26];
 
-struct huffNode {
-	char character;
-	int weight;
-	int size;
-	char* code;
-	HUFFNODE* left;
-	HUFFNODE* right;
-	HUFFNODE* parent;
-};
 
-HUFFNODE *newHUFFNODE(char character, int weight) {
-	HUFFNODE* currNode = malloc(sizeof(HUFFNODE));
+HuffNode *newHUFFNODE(char character, int weight) {
+	HuffNode* currNode = malloc(sizeof(HuffNode));
 	currNode->character = character;
 	currNode->weight = weight;
 	currNode->code = 0;
@@ -28,63 +19,69 @@ HUFFNODE *newHUFFNODE(char character, int weight) {
 	return currNode;
 }
 
-char getCharacter(HUFFNODE *h) {
-	if(h == 0) {
-		return  0;
+char getCharacter(HuffNode *h) {
+	if (!h) {
+		// If h is null, then should we return an error?
+		// Returning a '0' makes it seem like that's the
+		// right character we are returning.
+		return 0;
 	}
 	return h->character;
 }
 
-int getWeight(HUFFNODE *h) {
+int getWeight(HuffNode *h) {
 	if(h == 0) {
 		return 0;
 	}
 	return h->weight;
 }
 
-void displayNode(HUFFNODE *h) {
-	if(h == 0) {
+void displayNode(HuffNode *h) {
+	if (!h) {
 		return;
 	}
-	if(h->character == 0) {
+	if (!h->character) {
 		printf("XX %d\n", h->weight);
-	}
-	else {
+	} else {
 		printf("%c %d\n", h->character, h->weight);
 	}
-	if(h->left != 0) printf("L: ");
+	if (h->left != 0) {
+		printf("L: ");
+	}
 	displayNode(h->left);
-	if(h->right != 0) printf("R: ");
+	if (h->right != 0) {
+		printf("R: ");
+	}
 	displayNode(h->right);
 }
 
-void setLeft(HUFFNODE *parent, HUFFNODE *child) {
+void setLeft(HuffNode *parent, HuffNode *child) {
 	parent->left = child;
 }
 
-void setRight(HUFFNODE *parent, HUFFNODE *child) {
+void setRight(HuffNode *parent, HuffNode *child) {
 	parent->right = child;
 }
 
-void setParent(HUFFNODE *child, HUFFNODE *parent) {
+void setParent(HuffNode *child, HuffNode *parent) {
 	child->parent = parent;
 }
 
-void findLeaves(HUFFNODE* finalNode, int count) {
-	if(finalNode == 0) {
+void findLeaves(HuffNode* finalNode, int count) {
+	if (!finalNode) {
 		return;
 	}
-	if(!finalNode->left && !finalNode->right) {
+	if (!finalNode->left && !finalNode->right) {
 		codeTable[finalNode->character - 97] = malloc(strlen(code) * sizeof(char));
 		strcpy(codeTable[finalNode->character - 97], code);
 		code[strlen(code)-1] = '\0';
 		return;
 	}
-	if(finalNode->left) {
+	if (finalNode->left) {
 		strcat(code, "0");
 		findLeaves(finalNode->left, count);
 	}
-	if(finalNode->right) {
+	if (finalNode->right) {
 		strcat(code, "1");
 		findLeaves(finalNode->right, count);
 	}

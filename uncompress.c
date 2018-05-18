@@ -1,12 +1,14 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
 int main(int argc, char** argv) {
+	// You really out to put some error checking for correct
+	// number of arguments and stuff here...
 	char* dataFile = argv[argc - 1];
 	FILE* fp = fopen(dataFile, "r");
-	
+
 	char currChar;
 	char* codeTable[26];
 	int codeTableIndex;
@@ -18,8 +20,8 @@ int main(int argc, char** argv) {
 	
 
 	fscanf(fp, "%c", &currChar);		//Extracts all the code values.
-	while(currChar != '*') {
-		if(isalpha(currChar)) {
+	while (currChar != '*') {
+		if (isalpha(currChar)) {
 			codeTableIndex = currChar - 97;
 			fscanf(fp, "%s", temp);
 			codeTable[codeTableIndex] = malloc(strlen(temp) * sizeof(char));
@@ -39,14 +41,14 @@ int main(int argc, char** argv) {
 	int count = 0;
 
 	fscanf(fp, "%c", &temp0);
-	while(!feof(fp)) {
-		if(isalnum(temp0)) {
+	while (!feof(fp)) {
+		if (isalnum(temp0)) {
 			codeInFile = realloc(codeInFile, sizeof(char) * (count + 1));
 			codeInFile[count] = temp0;
-			for(int i = 0; i < 26; i++) {
-				if(codeTable[i] != 0) {
-					printf("Comparing %s(%d) and %s(%d)\n", codeInFile, strlen(codeInFile), codeTable[i], strlen(codeTable[i]));
-					if(strcmp(codeInFile, codeTable[i]) == 0) {
+			for( int i = 0; i < 26; i++) {
+				if (codeTable[i] != 0) {
+					printf("Comparing %s(%lu) and %s(%lu)\n", codeInFile, strlen(codeInFile), codeTable[i], strlen(codeTable[i]));
+					if (strcmp(codeInFile, codeTable[i]) == 0) {
 						printf("%c\n", (char) i +97);
 						count = -1;
 					}
@@ -58,9 +60,12 @@ int main(int argc, char** argv) {
 	}
 
 	printf("%s\n", codeInFile);
-	/*for(int i = 0; i < strlen(codeInFile); i++) {
-		printf("%c", codeInFile[i]);
-	}*/
 
-return 0;
+	/*
+	for(int i = 0; i < strlen(codeInFile); i++) {
+		printf("%c", codeInFile[i]);
+	}
+	*/
+
+	return 0;
 }
