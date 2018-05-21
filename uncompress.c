@@ -3,9 +3,14 @@
 #include <ctype.h>
 #include <string.h>
 
+int strComp(char* codeTableStr, char* fullCompressedStr, int start, int finish);
+
 int main(int argc, char** argv) {
-	// You really out to put some error checking for correct
-	// number of arguments and stuff here...
+	if (argc < 2) {
+		printf("Type in a data file after ./a.out.\n");
+		return 0;
+	}
+	
 	char* dataFile = argv[argc - 1];
 	FILE* fp = fopen(dataFile, "r");
 
@@ -18,6 +23,12 @@ int main(int argc, char** argv) {
 		codeTable[i] = 0;
 	}
 	
+	fscanf(fp, "%c", &currChar);
+
+	if(currChar != '*') {
+		printf("Wrong format data file. The data file should end with a \".compressed\"\n");
+		return 0;
+	}
 
 	fscanf(fp, "%c", &currChar);		//Extracts all the code values.
 	while (currChar != '*') {
@@ -30,42 +41,50 @@ int main(int argc, char** argv) {
 		fscanf(fp, "%c", &currChar);
 	}
 
-	/*for(int i = 0; i < 26; i++) {		//Used for printing the code table.
-		if(codeTable[i] != 0) {
-			printf("%c %s\n", (char) (i + 97), codeTable[i]);
-		}
-	}*/
+	char compressedCode[1000000];
 
-	char* codeInFile;
-	char temp0;
-	int count = 0;
+	while (!isalnum(compressedCode[0])) {
+		fgets(compressedCode, 1000000, fp);
+	}
 
-	fscanf(fp, "%c", &temp0);
-	while (!feof(fp)) {
-		if (isalnum(temp0)) {
-			codeInFile = realloc(codeInFile, sizeof(char) * (count + 1));
-			codeInFile[count] = temp0;
-			for( int i = 0; i < 26; i++) {
-				if (codeTable[i] != 0) {
-					printf("Comparing %s(%lu) and %s(%lu)\n", codeInFile, strlen(codeInFile), codeTable[i], strlen(codeTable[i]));
-					if (strcmp(codeInFile, codeTable[i]) == 0) {
-						printf("%c\n", (char) i +97);
-						count = -1;
-					}
+	int finish = 0, start = 0, result = 0;
+
+	printf("Uncompressed text:\n");
+	while (start < strlen(compressedCode)) {
+		for (int i = 0; i < 26; i++) {
+			if (codeTable[i] != 0) {
+				result = strComp(codeTable[i], compressedCode, start, finish);
+				if (result == 1) {
+					printf("%c", (char) i + 97);
+					start = finish + 1;
+					i = 26;
 				}
 			}
-			count++;
 		}
-		fscanf(fp, "%c", &temp0);
+		finish++;
 	}
-
-	printf("%s\n", codeInFile);
-
-	/*
-	for(int i = 0; i < strlen(codeInFile); i++) {
-		printf("%c", codeInFile[i]);
-	}
-	*/
+	printf("\n");
+	
+	fclose(fp);
 
 	return 0;
 }
+
+int strComp(char* codeTableStr, char* fullCompressedStr, int start, int finish) {
+	if (strlen(codeTableStr) != ((finish + 1) - start)) {
+		return 0;
+	}
+	int count = 0;
+	for (int i = start; i <= finish; i++) {
+		if (codeTableStr[count] != fullCompressedStr[i]) {
+			return 0;
+		}
+		count++;
+	}
+	return 1;
+}
+
+
+
+
+

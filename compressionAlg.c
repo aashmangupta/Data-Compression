@@ -75,6 +75,7 @@ int main(int argc, char** argv) {
 	char* newFile = strcat(dataFile, ".compressed"); 
 	FILE* compressedFile = fopen(newFile, "w");
 
+	fprintf(compressedFile, "* ");
 	for (int i = 0; i < 26; i++) {		//This puts in code values in to the compressed file, so that the data can be uncompressed.
 		if (codeTable[i] != 0) {
 			fprintf(compressedFile, "%c%s ", (char) i + 97, codeTable[i]);

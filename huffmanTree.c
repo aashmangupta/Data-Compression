@@ -21,11 +21,6 @@ HuffNode *newHUFFNODE(char character, int weight) {
 
 char getCharacter(HuffNode *h) {
 	if (!h) {
-		// If h is null, then should we return an error?
-		// Returning a '0' makes it seem like that's the
-		// right character we are returning.
-		// By an error, I mean:
-		// printint to standard error, and call exit(1);
 		return 0;
 	}
 	return h->character;
