@@ -12,4 +12,5 @@
 
 ## Compile Instructions ##
 
-* run 'make' on any *nix environment.
+* To compile compressionAlg run: run gcc compressionAlg.c huffmanTree.c
+* To compile uncompress run: gcc uncompress.c
