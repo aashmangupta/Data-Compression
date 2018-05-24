@@ -6,7 +6,7 @@
 	later on.
 
 3.	The changes in Version 1.1:
-		*Uncompression finally works.
+		-Uncompression finally works.
 		-Added a random.c program that can generate a randomized data file, which can then be used to test my
 		compression and decompression software.
 
