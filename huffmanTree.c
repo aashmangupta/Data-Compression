@@ -4,7 +4,7 @@
 #include <string.h>
 
 char code[100000];
-char* codeTable[26];
+char* codeTable[95];
 
 
 HuffNode *newHUFFNODE(char character, int weight) {
@@ -69,8 +69,8 @@ void findLeaves(HuffNode* finalNode, int count) {
 		return;
 	}
 	if (!finalNode->left && !finalNode->right) {
-		codeTable[finalNode->character - 97] = malloc(strlen(code) * sizeof(char));
-		strcpy(codeTable[finalNode->character - 97], code);
+		codeTable[finalNode->character - 32] = malloc(strlen(code) * sizeof(char));
+		strcpy(codeTable[finalNode->character - 32], code);
 		code[strlen(code)-1] = '\0';
 		return;
 	}
