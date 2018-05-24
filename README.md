@@ -10,6 +10,9 @@
 		-Added a random.c program that can generate a randomized data file, which can then be used to test my
 		compression and decompression software.
 
+4. 	Version 1.2:
+		-Compression works with special characters(not just lower-case alphabets) :)
+
 ## Compile Instructions ##
 
 * To compile compressionAlg run: run gcc compressionAlg.c huffmanTree.c
