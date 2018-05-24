@@ -79,10 +79,15 @@ int main(int argc, char** argv) {
 	fprintf(compressedFile, "* ");
 	for (int i = 0; i < 95; i++) {		//This puts in code values in to the compressed file, so that the data can be uncompressed.
 		if (codeTable[i] != 0) {
-			fprintf(compressedFile, "%c%s ", (char) i + 32, codeTable[i]);
+			if(i == 0) {
+				fprintf(compressedFile, "space%s ", codeTable[i]);
+			}
+			else {
+				fprintf(compressedFile, "%c%s ", (char) i + 32, codeTable[i]);
+			}
 		}
 	}
-	fprintf(compressedFile, "*\n");
+	fprintf(compressedFile, "/*\n");
 
 	int codeTableIndex = 0;
 	

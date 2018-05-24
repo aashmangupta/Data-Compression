@@ -15,30 +15,36 @@ int main(int argc, char** argv) {
 	FILE* fp = fopen(dataFile, "r");
 
 	char currChar;
-	char* codeTable[26];
+	char* codeTable[95];
 	int codeTableIndex;
 	char temp[100000];
 
-	for(int i = 0; i < 26; i++) {		//sets initial values of the codeTable to NULL.
+	for(int i = 0; i < 95; i++) {		//sets initial values of the codeTable to NULL.
 		codeTable[i] = 0;
 	}
 	
 	fscanf(fp, "%c", &currChar);
-
-	if(currChar != '*') {
+	if (currChar != '*') {
 		printf("Wrong format data file. The data file should end with a \".compressed\"\n");
 		return 0;
 	}
 
-	fscanf(fp, "%c", &currChar);		//Extracts all the code values.
-	while (currChar != '*') {
-		if (isalpha(currChar)) {
-			codeTableIndex = currChar - 97;
-			fscanf(fp, "%s", temp);
-			codeTable[codeTableIndex] = malloc(strlen(temp) * sizeof(char));
-			strcpy(codeTable[codeTableIndex], temp);
+	char letterCode[100];
+
+	fscanf(fp, "%s", letterCode);
+	while (strcmp(letterCode, "/*") != 0) {
+		if ((letterCode[0] == 's') && (letterCode[1] == 'p')) {
+			codeTableIndex = 0;
+			memmove(letterCode, letterCode + 5, strlen(letterCode));
 		}
-		fscanf(fp, "%c", &currChar);
+		else {
+			currChar = letterCode[0];
+			codeTableIndex = currChar - 32;
+			memmove(letterCode, letterCode + 1, strlen(letterCode));
+		}
+		codeTable[codeTableIndex] = malloc(strlen(letterCode) * sizeof(char));
+		strcpy(codeTable[codeTableIndex], letterCode);
+		fscanf(fp, "%s", letterCode);
 	}
 
 	char compressedCode[1000000];
@@ -51,13 +57,13 @@ int main(int argc, char** argv) {
 
 	printf("Uncompressed text:\n");
 	while (start < strlen(compressedCode)) {
-		for (int i = 0; i < 26; i++) {
+		for (int i = 0; i < 95; i++) {
 			if (codeTable[i] != 0) {
 				result = strComp(codeTable[i], compressedCode, start, finish);
 				if (result == 1) {
-					printf("%c", (char) i + 97);
+					printf("%c", (char) i + 32);
 					start = finish + 1;
-					i = 26;
+					i = 95;
 				}
 			}
 		}
@@ -66,7 +72,6 @@ int main(int argc, char** argv) {
 	printf("\n");
 	
 	fclose(fp);
-
 	return 0;
 }
 

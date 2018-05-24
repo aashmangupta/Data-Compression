@@ -11,7 +11,7 @@
 		compression and decompression software.
 
 4. 	Version 1.2:
-		-Compression works with special characters(not just lower-case alphabets) :)
+		-Compression and uncompression works with special characters(not just lower-case alphabets) :)
 
 ## Compile Instructions ##
 

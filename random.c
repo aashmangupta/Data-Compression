@@ -8,7 +8,7 @@ int main() {
 	FILE* fp = fopen("data", "w");
 
 	for(int i = 0; i < 100000; i++) {
-		num = (rand() % (122- 97 + 1)) + 97;
+		num = (rand() % (126- 32 + 1)) + 32;
 		fprintf(fp, "%c", (char)num);
 	}
 
