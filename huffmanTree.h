@@ -1,3 +1,5 @@
+//Huffman tree class created by Aashman Gupta
+
 #ifndef __HUFF_INCLUDED__
 #define __HUFF_INCLUDED__
 

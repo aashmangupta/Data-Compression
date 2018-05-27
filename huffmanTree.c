@@ -1,3 +1,5 @@
+//Huffman tree class created by Aashman Gupta
+
 #include "huffmanTree.h"
 #include <stdio.h>
 #include <stdlib.h>

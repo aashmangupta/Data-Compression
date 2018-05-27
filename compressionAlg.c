@@ -1,4 +1,6 @@
+//Compression software created by Aashman Gupta
 //To include ever character we need 95 elements
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>

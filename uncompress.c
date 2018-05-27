@@ -1,3 +1,5 @@
+//Uncompression software created by Aashman Gupta
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
