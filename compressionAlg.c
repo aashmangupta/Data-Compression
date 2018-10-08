@@ -1,4 +1,5 @@
 //FIXME How to compress:
+//FIXME find a way to efficintly store huffman tree.
 
 /*
 1. Get the binary code from huffman tree.
