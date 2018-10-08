@@ -17,3 +17,9 @@
 
 * To compile compressionAlg run: run gcc compressionAlg.c huffmanTree.c
 * To compile uncompress run: gcc uncompress.c
+
+## What needs to be done ##
+
+* Currently the 1's and 0's are being saved as 8 bit characters instead of 1 bit.
+* Can't manipulate bits individually because bits starting with 0 (and some other cases) can't be identified by the computer.
+* 0100 1011 - won't be recognized by machine and will be represented by '?'
