@@ -27,7 +27,7 @@ int getMinHuffNode();
 void makeIndividualNodes(int index);
 int setBit(int bitCode);
 char* binStr = 0;						//String used in sevenDigitBuf
-void sevenDigitBuff(char* str);			//Func. to gather huffman codes. max length 7(so they can turn into ASCII)
+void sevenDigitBuff(char* str, FILE* fp);			//Func. to gather huffman codes. max length 7(so they can turn into ASCII)
 int binToDec(char* str);
 
 int main(int argc, char** argv) {
@@ -113,20 +113,13 @@ int main(int argc, char** argv) {
 	fscanf(fp2, "%c", &currChar);
 	while ((!feof(fp2)) && (currChar != '\n')) {
 		codeTableIndex = currChar - 32;
-		fprintf(compressedFile, "%s", codeTable[codeTableIndex]);
-		
-		//Attempt to fix compression starts here:
-		printf("%s", codeTable[codeTableIndex]);
+		//fprintf(compressedFile, "%s", codeTable[codeTableIndex]);
 		strcat(fullStr, codeTable[codeTableIndex]);
-		//Ends here
-
-
-
 		fscanf(fp2, "%c", &currChar);
 	}
 	printf("\n");
 
-	sevenDigitBuff(fullStr);
+	sevenDigitBuff(fullStr, compressedFile);
 
 	fclose(fp2);
 	fclose(compressedFile);
@@ -149,7 +142,7 @@ int binToDec(char* str) {
 	return decVal;
 }
 
-void sevenDigitBuff(char* str) {		//Groups code by 7 nums each
+void sevenDigitBuff(char* str, FILE* fp) {		//Groups code by 7 nums each
 	int start = 0, count = 0;
 	int end = 7;
 
@@ -171,10 +164,11 @@ void sevenDigitBuff(char* str) {		//Groups code by 7 nums each
 			end = end + 7;
 		}
 		count = 0;
-		printf("%s", smallStr);
-		printf(" - The decimal is %d\n", binToDec(smallStr));
+		//printf("%s", smallStr);
+		//printf(" - The decimal is %d", binToDec(smallStr));
+		//printf("- char is %c\n", binToDec(smallStr));
+		fprintf(fp, "%c", binToDec(smallStr));
 	}
-
 }
 
 int setBit(int bitCode) {
