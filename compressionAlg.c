@@ -1,5 +1,15 @@
+//FIXME How to compress:
+
+/*
+1. Get the binary code from huffman tree.
+2. Turn the 7 bits(Most significant bit is useless) into a number.
+3. Then turn the number into a char using ASCII table and print it to the compressed file.
+*/
+
+
+//FIXME currently doesn't work with '\n'. Think of a way to fix this... maybe fgets?
 //Compression software created by Aashman Gupta
-//To include ever character we need 95 elements
+//To include every character we need 95 elements
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +25,10 @@ void formHuffmanTree();
 void populateTable(char currChar);
 int getMinHuffNode();
 void makeIndividualNodes(int index);
+int setBit(int bitCode);
+char* binStr = 0;						//String used in sevenDigitBuf
+void sevenDigitBuff(char* str);			//Func. to gather huffman codes. max length 7(so they can turn into ASCII)
+int binToDec(char* str);
 
 int main(int argc, char** argv) {
 	char currChar;
@@ -35,6 +49,7 @@ int main(int argc, char** argv) {
 	
 	fscanf(fp, "%c", &currChar);		//This loop puts in the amount of repetitions of each character.
 	while (!feof(fp)) {
+		//printf("%c", currChar);
 		populateTable(currChar);
 		fscanf(fp, "%c", &currChar);	
 	}
@@ -79,7 +94,7 @@ int main(int argc, char** argv) {
 	FILE* compressedFile = fopen(newFile, "w");
 
 	fprintf(compressedFile, "* ");
-	for (int i = 0; i < 95; i++) {		//This puts in code values in to the compressed file, so that the data can be uncompressed.
+	for (int i = 0; i < 95; i++) {		//This puts in characters and there huffman code in to the compressed file, so that the data can be uncompressed.
 		if (codeTable[i] != 0) {
 			if(i == 0) {
 				fprintf(compressedFile, "space%s ", codeTable[i]);
@@ -93,17 +108,92 @@ int main(int argc, char** argv) {
 
 	int codeTableIndex = 0;
 	
+	char* fullStr = malloc(sizeof(char) * 1000000);	//This will hold the whole compressed code that is created
+
 	fscanf(fp2, "%c", &currChar);
 	while ((!feof(fp2)) && (currChar != '\n')) {
 		codeTableIndex = currChar - 32;
 		fprintf(compressedFile, "%s", codeTable[codeTableIndex]);
+		
+		//Attempt to fix compression starts here:
+		printf("%s", codeTable[codeTableIndex]);
+		strcat(fullStr, codeTable[codeTableIndex]);
+		//Ends here
+
+
+
 		fscanf(fp2, "%c", &currChar);
 	}
+	printf("\n");
+
+	sevenDigitBuff(fullStr);
 
 	fclose(fp2);
 	fclose(compressedFile);
+	free(fullStr);
 
 	return 0;
+}
+
+int binToDec(char* str) {
+	int num = atoi(str);
+	int rem, base = 1;
+	int decVal = 0;
+
+	while(num > 0) {
+		rem = num % 10;
+		decVal = decVal + rem * base;
+		num = num / 10;
+		base = base * 2;
+	}
+	return decVal;
+}
+
+void sevenDigitBuff(char* str) {		//Groups code by 7 nums each
+	int start = 0, count = 0;
+	int end = 7;
+
+	char* smallStr = malloc(sizeof(char) * 8);	//holds the smaller 7 digit string
+	smallStr[8] = '\0';
+	while(end <= strlen(str)) {
+		smallStr = 0;
+		smallStr = malloc(sizeof(char) * 8);
+		for(int i = start; i < end; i++) {
+			smallStr[count] = str[i];
+			count++;
+		}
+
+		start = end;
+		if(((end != strlen(str))) && (end < strlen(str)) && (end + 7 > strlen(str))) {
+			end = strlen(str);
+		}
+		else {
+			end = end + 7;
+		}
+		count = 0;
+		printf("%s", smallStr);
+		printf(" - The decimal is %d\n", binToDec(smallStr));
+	}
+
+}
+
+int setBit(int bitCode) {
+	int result;
+	static char bits = 0;
+	static int index = -1;
+	
+	if(index == -1) {
+		index = 7;
+	}
+	
+	if(bitCode == 1) {
+		bits = (1UL << index) | bits;
+	}
+
+	result = (bits >> index) & 1;
+	index--;
+	printf("Byte: %c ", bits);
+	return result;
 }
 
 void formHuffmanTree() {
