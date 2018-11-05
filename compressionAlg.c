@@ -1,10 +1,12 @@
-//FIXME How to compress:
-//FIXME find a way to efficintly store huffman tree.
+//TODO find a way to efficintly store huffman tree.
+//TODO find a way to read/write/represent non-printable ASCII chars. (efficiently ofc)
+
+//Compression logic
 
 /*
 1. Get the binary code from huffman tree.
-2. Turn the 7 bits(Most significant bit is useless) into a number.
-3. Then turn the number into a char using ASCII table and print it to the compressed file.
+2. turn binary into decimal.
+3. Turn the decimal number into a char using ASCII table and print it to the compressed file.
 */
 
 
@@ -114,12 +116,9 @@ int main(int argc, char** argv) {
 	fscanf(fp2, "%c", &currChar);
 	while ((!feof(fp2)) && (currChar != '\n')) {
 		codeTableIndex = currChar - 32;
-		//fprintf(compressedFile, "%s", codeTable[codeTableIndex]);
 		strcat(fullStr, codeTable[codeTableIndex]);
 		fscanf(fp2, "%c", &currChar);
 	}
-	printf("\n");
-
 	sevenDigitBuff(fullStr, compressedFile);
 
 	fclose(fp2);
@@ -170,25 +169,6 @@ void sevenDigitBuff(char* str, FILE* fp) {		//Groups code by 7 nums each
 		//printf("- char is %c\n", binToDec(smallStr));
 		fprintf(fp, "%c", binToDec(smallStr));
 	}
-}
-
-int setBit(int bitCode) {
-	int result;
-	static char bits = 0;
-	static int index = -1;
-	
-	if(index == -1) {
-		index = 7;
-	}
-	
-	if(bitCode == 1) {
-		bits = (1UL << index) | bits;
-	}
-
-	result = (bits >> index) & 1;
-	index--;
-	printf("Byte: %c ", bits);
-	return result;
 }
 
 void formHuffmanTree() {

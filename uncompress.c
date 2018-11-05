@@ -90,8 +90,3 @@ int strComp(char* codeTableStr, char* fullCompressedStr, int start, int finish) 
 	}
 	return 1;
 }
-
-
-
-
-
